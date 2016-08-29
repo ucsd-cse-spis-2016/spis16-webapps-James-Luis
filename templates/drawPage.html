@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+
+<h1>Draw</h1>
+
+<p>Click and drag to draw</p>
+<p>Click somewhere to type</p>
+<p>Press backspace to clear your text</p>
+
+
+<canvas id="myCanvas" width="1000" height="800"></canvas>
+
+
+<script type="text/paperscript" canvas="myCanvas">
+
+var myPath;
+
+function onMouseDown(event) {
+	myPath = new Path();
+        myPath.strokeColor = "black";
+}
+
+function onMouseDrag(event) {
+    myPath.add(event.point);
+}
+
+var text;
+
+function onMouseUp(event) {
+    text = new PointText({
+        point: event.point,
+        content: '',
+        fillColor: 'black',
+        fontFamily: 'Courier New',
+        fontWeight: 'bold',
+        fontSize: 25
+    });
+}
+
+function onKeyDown(event) {
+	text.content += event.character
+        if (event.key == "backspace") {
+            text.content = '';
+        }
+}
+
+
+
+
+</script>
+
+{% endblock %}
