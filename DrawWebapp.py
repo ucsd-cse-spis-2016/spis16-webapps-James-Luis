@@ -111,10 +111,13 @@ def authorized():
 
     return redirect(url_for('home'))  
 
+@github.tokengetter
+def get_github_oauth_token():
+    return session.get('github_token')
 
 
 @app.route("/")
-def render_main():
+def home():
     return render_template('home.html')
 
 @app.route("/drawpage")
@@ -126,10 +129,5 @@ def render_testpage():
     return render_template('testPage.html')
 
 
-@github.tokengetter
-def get_github_oauth_token():
-    return session.get('github_token')
-
-
 if __name__ == "__main__":
-    app.run(debug=False, port=5001)
+    app.run(debug=True, port=5001)

@@ -4,22 +4,36 @@
 
 {% block content %}
 
-<h1>Draw</h1>
+<p>Click and drag to draw.</p>
+<p>Press backspace to clear the last item.</p>
 
-<p>Click and drag to draw</p>
-<p>Click somewhere to type</p>
-<p>Press backspace to clear your text or delete the last item you drew</p>
+<br>
+    <div class="dropdown">
+      <button class="dropbtn">Tools</button>
+      <div class="dropdown-content">
+        <a onclick="pen_tool.activate();">Pen</a>
+        <a onclick="circle_tool.activate();">Circle</a>
+        <a onclick="text_tool.activate();">Text</a>
+      </div>
+    </div>
 
-<p> <a href="#" onclick="pen_tool.activate();">Pen</a>
-    <a href="#" onclick="circle_tool.activate();">Circle</a>
-    <a href="#" onclick="text_tool.activate();">Text</a>
-    <br>
-    <a href="#" onclick="change('black')">Black</a>
-    <a href="#" onclick="change('blue')">Blue</a>
-    <a href="#" onclick="change('red')">Red</a>
-    <a href="#" onclick="change('green')">Green</a>
+    <h4>Colors:</h4>
     
-</p>
+    <button onclick="color_change('black')">Black</button>
+    <button onclick="color_change('red')">Red</button>
+    <button onclick="color_change('orange')">Orange</button>
+    <button onclick="color_change('gold')">Yellow</button>
+    <button onclick="color_change('green')">Green</button>
+    <button onclick="color_change('blue')">Blue</button>
+    <button onclick="color_change('purple')">Purple</button>
+
+    <h4>Thickness:</h4>
+
+    <button onclick="thick_change(1)">1 px</button>
+    <button onclick="thick_change(2)">2 px</button>
+    <button onclick="thick_change(3)">3 px</button>
+    <button onclick="thick_change(4)">4 px</button>
+    <button onclick="thick_change(5)">5 px</button>
 
 <canvas id="myCanvas" width="1000" height="800"></canvas>
 
@@ -27,11 +41,15 @@
 
 paper.install(window);
 
-var pen_tool, circle_tool, text_tool, color;
+var pen_tool, circle_tool, text_tool, color, thick;
 color = 'black'
 
-function change(newColor) {
-        color = newColor;
+function color_change(newColor) {
+    color = newColor;
+}
+
+function thick_change(newThick) {
+    thick = newThick
 }
 
 window.onload = function() {
@@ -40,6 +58,7 @@ window.onload = function() {
     function onMouseDown(event) {
       myPath = new Path();
       myPath.strokeColor = color;
+      myPath.strokeWidth = thick;
       myPath.add(event.point);
     }
     
@@ -62,6 +81,7 @@ window.onload = function() {
             radius: event.delta.length/2
         });
         circle.strokeColor = color;
+        circle.strokeWidth = thick;
         circle_tool.onKeyDown = function(event) {
             if (event.key == "backspace") {
                 circle.removeSegments();
@@ -78,7 +98,7 @@ window.onload = function() {
             fillColor: color,
             fontFamily: 'Courier New',
             fontWeight: 'bold',
-            fontSize: 25
+            fontSize: (10 * thick)
         });
         text_tool.onKeyDown = function(event) {
             text.content += event.character
