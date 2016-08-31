@@ -8,43 +8,86 @@
 
 <p>Click and drag to draw</p>
 <p>Click somewhere to type</p>
-<p>Press backspace to clear your text</p>
+<p>Press backspace to clear your text or delete the last item you drew</p>
 
+<p> <a href="#" onclick="pen_tool.activate();">Pen</a>
+    <a href="#" onclick="circle_tool.activate();">Circle</a>
+    <a href="#" onclick="text_tool.activate();">Text</a>
+    <br>
+    <a href="#" onclick="change('black')">Black</a>
+    <a href="#" onclick="change('blue')">Blue</a>
+    <a href="#" onclick="change('red')">Red</a>
+    <a href="#" onclick="change('green')">Green</a>
+    
+</p>
 
 <canvas id="myCanvas" width="1000" height="800"></canvas>
 
+<script type="text/javascript">
 
-<script type="text/paperscript" canvas="myCanvas">
+paper.install(window);
 
-var myPath;
+var pen_tool, circle_tool, text_tool, color;
+color = 'black'
 
-function onMouseDown(event) {
-	myPath = new Path();
-        myPath.strokeColor = "black";
+function change(newColor) {
+        color = newColor;
 }
 
-function onMouseDrag(event) {
-    myPath.add(event.point);
-}
-
-var text;
-
-function onMouseUp(event) {
-    text = new PointText({
-        point: event.point,
-        content: '',
-        fillColor: 'black',
-        fontFamily: 'Courier New',
-        fontWeight: 'bold',
-        fontSize: 25
-    });
-}
-
-function onKeyDown(event) {
-	text.content += event.character
-        if (event.key == "backspace") {
-            text.content = '';
+window.onload = function() {
+    paper.setup("myCanvas");
+    var myPath;
+    function onMouseDown(event) {
+      myPath = new Path();
+      myPath.strokeColor = color;
+      myPath.add(event.point);
+    }
+    
+    pen_tool = new Tool();
+    pen_tool.onMouseDown = onMouseDown;
+    pen_tool.onMouseDrag = function(event) {
+        myPath.add(event.point);
+        pen_tool.onKeyDown = function(event) {
+            if (event.key == "backspace") {
+                myPath.removeSegments();
+            }
         }
+    }
+
+    circle_tool = new Tool();
+    circle_tool.onMouseDown = onMouseDown;
+    circle_tool.onMouseUp = function(event) {
+        var circle = new Path.Circle({
+            center: event.middlePoint,
+            radius: event.delta.length/2
+        });
+        circle.strokeColor = color;
+        circle_tool.onKeyDown = function(event) {
+            if (event.key == "backspace") {
+                circle.removeSegments();
+            }
+        }
+    }
+
+    text_tool = new Tool();
+    text_tool.onMouseDown = onMouseDown;
+    text_tool.onMouseUp = function(event) {
+        var text = new PointText({
+            point: event.point,
+            content: '',
+            fillColor: color,
+            fontFamily: 'Courier New',
+            fontWeight: 'bold',
+            fontSize: 25
+        });
+        text_tool.onKeyDown = function(event) {
+            text.content += event.character
+            if (event.key == "backspace") {
+                text.content = '';
+            }
+        }
+    }
+    
 }
 
 
