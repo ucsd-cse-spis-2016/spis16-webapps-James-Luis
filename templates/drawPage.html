@@ -5,7 +5,7 @@
 {% block content %}
 
 <p>Click and drag to draw.</p>
-<p>Press backspace to clear the last item.</p>
+<p>Press backspace to clear the last item or white to erase.</p>
 
 <br>
 
@@ -68,12 +68,15 @@ function thick_change(newThick) {
 window.onload = function() {
     paper.setup("myCanvas");
     var myPath;
+    var layer;
     function onMouseDown(event) {
       myPath = new Path();
       myPath.strokeColor = color;
       myPath.strokeWidth = thick;
-      myPath.add(event.point);
+      layer = myPath;
+      project.activeLayer.addChild(layer);
     }
+
     
     pen_tool = new Tool();
     pen_tool.onMouseDown = onMouseDown;
@@ -81,7 +84,7 @@ window.onload = function() {
         myPath.add(event.point);
         pen_tool.onKeyDown = function(event) {
             if (event.key == "backspace") {
-                myPath.removeSegments();
+               project.activeLayer.lastChild.remove(); 
             }
         }
     }
@@ -93,11 +96,13 @@ window.onload = function() {
             center: event.middlePoint,
             radius: event.delta.length/2
         });
+        layer = circle;
+        project.activeLayer.addChild(layer);
         circle.strokeColor = color;
         circle.strokeWidth = thick;
         circle_tool.onKeyDown = function(event) {
             if (event.key == "backspace") {
-                circle.removeSegments();
+                project.activeLayer.lastChild.remove();
             }
         }
     }
@@ -113,10 +118,12 @@ window.onload = function() {
             fontWeight: 'bold',
             fontSize: (10 * thick)
         });
+        layer = text;
+        project.activeLayer.addChild(layer);
         text_tool.onKeyDown = function(event) {
             text.content += event.character
             if (event.key == "backspace") {
-                text.content = '';
+                project.activeLayer.lastChild.remove();
             }
         }
     }
