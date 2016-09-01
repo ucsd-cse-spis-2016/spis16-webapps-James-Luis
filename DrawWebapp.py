@@ -190,7 +190,7 @@ def write():
         return redirect(url_for('home'))    
     title = request.form.get("title") # match "id", "name" in form
     content = request.form.get("content") # match "id", "name" in form
-    print "content=" + content
+    print ("content=" + content)
     login = session['user_data']['login']    
     result = mongo.db.mycollection.insert_one(
             {
