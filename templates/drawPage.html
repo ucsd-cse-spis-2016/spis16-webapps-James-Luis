@@ -4,13 +4,13 @@
 
 {% block content %}
 
-<p>Click and drag to draw. Press backspace to clear the last item.</p>
+<p>Click and drag to draw. Press backspace to clear the last item. Use tool menu to select new tools.</p>
 
 <div class="center">
     <form action="/write" method="post" name="save_svg_form">
-        <label>Title<input type="text" name="title"></label>
+        <label>Title: <input type="text" name="title"></label>
         <input type="hidden" name="content" id="content" value="">
-        <button class="button" onclick="save_svg()">Save</button>
+        <button class="button save" onclick="save_svg()">Save</button>
         <div id="shareBtn" class="btn btn-success clearfix">Share</div>
     </form>
         
@@ -51,7 +51,7 @@
 
 paper.install(window);
 
-var pen_tool, circle_tool, text_tool, color, thick;
+var pen_tool, circle_tool, text_tool, color, thick, layer;
 color = 'black'
 
 function color_change(newColor) {
@@ -65,7 +65,6 @@ function thick_change(newThick) {
 window.onload = function() {
     paper.setup("myCanvas");
     var myPath;
-    var layer;
     function onMouseDown(event) {
       myPath = new Path();
       myPath.strokeColor = color;

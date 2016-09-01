@@ -41,6 +41,11 @@ canvas {
     color: black
 }
 
+.save:hover {
+    background-color: lightblue;
+    color: black
+}
+
 .black_button {
     background-color: white; 
     color: black; 
