@@ -3,20 +3,18 @@
 {% block title %}page1{% endblock %}
 
 {% block content %}
-<h1>List</h1>
+<h1>Drawings</h1>
 
 <table>
   <tr>
-    <th>oid</th>
-    <th>user</th>
-    <th>title</th>
-    <th>content</th>
+    <th>User</th>
+    <th>Title</th>
+    <th>Drawing</th>
     <th>delete</th>
   </tr>
 
   {% for userinput in userinputs %}
   <tr>
-    <td> {{userinput._id}} </td>
     <td> {{userinput.login}} </td>
     <td> {{ userinput.title }} </td>
     <td>{{ userinput.content | safe }}</td>

@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<p>Click and drag to draw. Press backspace to clear the last item. Use tool menu to select new tools.</p>
+<p>Click and drag to draw. Press delete to undo the last item. Use the tool menu to select new tools.</p>
 
 <div class="center">
     <form action="/write" method="post" name="save_svg_form">
@@ -79,7 +79,7 @@ window.onload = function() {
     pen_tool.onMouseDrag = function(event) {
         myPath.add(event.point);
         pen_tool.onKeyDown = function(event) {
-            if (event.key == "backspace") {
+            if (event.key == "delete") {
                project.activeLayer.lastChild.remove(); 
             }
         }
@@ -97,7 +97,7 @@ window.onload = function() {
         circle.strokeColor = color;
         circle.strokeWidth = thick;
         circle_tool.onKeyDown = function(event) {
-            if (event.key == "backspace") {
+            if (event.key == "delete") {
                 project.activeLayer.lastChild.remove();
             }
         }
@@ -118,7 +118,7 @@ window.onload = function() {
         project.activeLayer.addChild(layer);
         text_tool.onKeyDown = function(event) {
             text.content += event.character
-            if (event.key == "backspace") {
+            if (event.key == "delete") {
                 project.activeLayer.lastChild.remove();
             }
         }
