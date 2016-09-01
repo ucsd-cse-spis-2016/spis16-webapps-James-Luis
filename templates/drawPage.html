@@ -4,10 +4,7 @@
 
 {% block content %}
 
-<p>Click and drag to draw.</p>
-<p>Press backspace to clear the last item or white to erase.</p>
-
-<br>
+<p>Click and drag to draw. Press backspace to clear the last item.</p>
 
 <div class="center">
     <form action="/write" method="post" name="save_svg_form">
@@ -41,11 +38,11 @@
 
     Thickness:
 
-    <button class="button" onclick="thick_change(1)">1 px</button>
-    <button class="button" onclick="thick_change(2)">2 px</button>
-    <button class="button" onclick="thick_change(3)">3 px</button>
-    <button class="button" onclick="thick_change(4)">4 px</button>
-    <button class="button" onclick="thick_change(5)">5 px</button>
+    <button class="button thick" onclick="thick_change(1)">1 px</button>
+    <button class="button thick" onclick="thick_change(2)">2 px</button>
+    <button class="button thick" onclick="thick_change(3)">3 px</button>
+    <button class="button thick" onclick="thick_change(4)">4 px</button>
+    <button class="button thick" onclick="thick_change(5)">5 px</button>
 </div>
 
 <canvas id="myCanvas"></canvas>

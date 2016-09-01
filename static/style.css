@@ -36,6 +36,11 @@ canvas {
     cursor: pointer;
 }
 
+.thick:hover {
+    background-color: white;
+    color: black
+}
+
 .black_button {
     background-color: white; 
     color: black; 
