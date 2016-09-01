@@ -9,7 +9,7 @@
 
 <br>
     <div class="dropdown">
-      <button class="dropbtn">Tools</button>
+      <button class="button dropbtn">Tools</button>
       <div class="dropdown-content">
         <a onclick="pen_tool.activate();">Pen</a>
         <a onclick="circle_tool.activate();">Circle</a>
@@ -19,23 +19,27 @@
 
     <h4>Colors:</h4>
     
-    <button onclick="color_change('black')">Black</button>
-    <button onclick="color_change('red')">Red</button>
-    <button onclick="color_change('orange')">Orange</button>
-    <button onclick="color_change('gold')">Yellow</button>
-    <button onclick="color_change('green')">Green</button>
-    <button onclick="color_change('blue')">Blue</button>
-    <button onclick="color_change('purple')">Purple</button>
+    <button class="button black_button" onclick="color_change('black')">Black</button>
+    <button class="button red_button" onclick="color_change('red')">Red</button>
+    <button class="button orange_button" onclick="color_change('orange')">Orange</button>
+    <button class="button yellow_button" onclick="color_change('gold')">Yellow</button>
+    <button class="button green_button" onclick="color_change('green')">Green</button>
+    <button class="button blue_button" onclick="color_change('blue')">Blue</button>
+    <button class="button purple_button" onclick="color_change('purple')">Purple</button>
 
     <h4>Thickness:</h4>
 
-    <button onclick="thick_change(1)">1 px</button>
-    <button onclick="thick_change(2)">2 px</button>
-    <button onclick="thick_change(3)">3 px</button>
-    <button onclick="thick_change(4)">4 px</button>
-    <button onclick="thick_change(5)">5 px</button>
+    <button class="button" onclick="thick_change(1)">1 px</button>
+    <button class="button" onclick="thick_change(2)">2 px</button>
+    <button class="button" onclick="thick_change(3)">3 px</button>
+    <button class="button" onclick="thick_change(4)">4 px</button>
+    <button class="button" onclick="thick_change(5)">5 px</button>
 
-<canvas id="myCanvas" width="1000" height="800"></canvas>
+<canvas id="myCanvas"></canvas>
+
+<br><br>
+
+<div id="shareBtn" class="btn btn-success clearfix">Share</div>
 
 <script type="text/javascript">
 
@@ -111,7 +115,13 @@ window.onload = function() {
 }
 
 
-
+document.getElementById('shareBtn').onclick = function() {
+  FB.ui({
+    method: 'share',
+    display: 'popup',
+    href: 'https://developers.facebook.com/docs/',
+  }, function(response){});
+}
 
 </script>
 
