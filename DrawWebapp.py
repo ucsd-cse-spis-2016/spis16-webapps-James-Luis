@@ -4,6 +4,9 @@ from flask import render_template, flash, Markup
 
 from github import Github
 
+from flask_pymongo import PyMongo
+from flask_pymongo import ObjectId
+
 import pprint
 import os
 import sys
@@ -12,21 +15,32 @@ import traceback
 class GithubOAuthVarsNotDefined(Exception):
     '''raise this if the necessary env variables are not defined '''
 
-if os.getenv('GITHUB_CLIENT_ID') == None or \
-        os.getenv('GITHUB_CLIENT_SECRET') == None or \
-        os.getenv('APP_SECRET_KEY') == None or \
-        os.getenv('GITHUB_ORG') == None:
-    raise GithubOAuthVarsNotDefined('''
-      Please define environment variables:
-         GITHUB_CLIENT_ID
-         GITHUB_CLIENT_SECRET
-         GITHUB_ORG
-         APP_SECRET_KEY
-      ''')
+env_vars_needed = ['GITHUB_CLIENT_ID', 'GITHUB_CLIENT_SECRET',
+                   'APP_SECRET_KEY', 'GITHUB_ORG', 
+                   'MONGO_HOST', 'MONGO_PORT', 'MONGO_DBNAME', 
+                   'MONGO_USERNAME', 'MONGO_PASSWORD']
+
+for e in env_vars_needed: 
+    if os.getenv(e) == None:
+        raise GithubOAuthVarsNotDefined(
+            "Please define environment variables: \r\n" + 
+            pprint.pformat(env_vars_needed) + """
+For local operation, define in env.sh, then at command line, run:
+  . env.sh
+For Heroku, define variables via Settings=>Reveal Config Vars
+""" )
 
 app = Flask(__name__)
 app.secret_key = os.environ['APP_SECRET_KEY']
 oauth = OAuth(app)
+
+app.config['MONGO_HOST'] = os.environ['MONGO_HOST']
+app.config['MONGO_PORT'] = int(os.environ['MONGO_PORT'])
+app.config['MONGO_DBNAME'] = os.environ['MONGO_DBNAME']
+app.config['MONGO_USERNAME'] = os.environ['MONGO_USERNAME']
+app.config['MONGO_PASSWORD'] = os.environ['MONGO_PASSWORD']
+mongo = PyMongo(app)
+
 
 # This code originally from https://github.com/lepture/flask-oauthlib/blob/master/example/github.py
 # Edited by P. Conrad for SPIS 2016 to add getting Client Id and Secret from
@@ -116,6 +130,93 @@ def get_github_oauth_token():
     return session.get('github_token')
 
 
+@app.route('/listAll')
+def listAll():
+    if not is_logged_in():
+        flash("You must be logged in to do that",'error')
+        return redirect(url_for('home')) 
+    login = session['user_data']['login']   
+    userinputs = [x for x in mongo.db.mycollection.find()]
+    return render_template('list.html',userinputs = userinputs,login=login)
+
+@app.route('/listMine')
+def listMine():
+    if not is_logged_in():
+        flash("You must be logged in to do that",'error')
+        return redirect(url_for('home'))    
+    login = session['user_data']['login']
+    userinputs = [x for x in mongo.db.mycollection.find({'login':login})]
+    return render_template('list.html',userinputs = userinputs,login=login)
+
+
+@app.route('/add')
+def add():
+    if not is_logged_in():
+        flash("You must be logged in to do that",'error')
+        return redirect(url_for('home'))    
+    return render_template('add.html')
+@app.route('/delete/<oid>',methods=['POST'])
+def delete(oid):
+    if not is_logged_in():
+        flash("You must be logged in to do that",'error')
+        return redirect(url_for('home'))    
+    login = session['user_data']['login']    
+    result = mongo.db.mycollection.find_one({'_id': ObjectId(oid)})
+    if not 'login' in result:
+        flash("Error deleting record with oid " + repr(oid) + "; could not determine user for record",
+              "error")
+        return redirect(url_for('listAll'))
+    elif result['login'] != login:              
+        flash("Cannot delete record for oid " + 
+              repr(oid) + " belonging to user " + result['login'],'error')
+        return redirect(url_for('listAll'))
+                  
+    result = mongo.db.mycollection.delete_one({'_id': ObjectId(oid),'login':login})
+    if result.deleted_count == 0:
+        flash("Error: Record with oid " + repr(oid) + " was not deleted",'error')
+    elif result.deleted_count == 1:
+        flash("Record with oid " + repr(oid) + " deleted")
+    else:
+        flash("Error: Unexpected result.deleted_count=" + \
+                  str(result.deleted_count))
+
+    return redirect(url_for('listAll'))
+
+
+@app.route('/write',methods=['POST'])
+def write():
+    if not is_logged_in():
+        flash("You must be logged in to do that",'error')
+        return redirect(url_for('home'))    
+    title = request.form.get("title") # match "id", "name" in form
+    content = request.form.get("content") # match "id", "name" in form
+    print "content=" + content
+    login = session['user_data']['login']    
+    result = mongo.db.mycollection.insert_one(
+            {
+                "title"   : title, 
+                "content" : content,
+                "login"   : login
+            }
+        )
+    flash("Saved to database with oid=" + str(result.inserted_id))
+    return redirect(url_for('listAll'))
+
+
+
+
+@app.context_processor
+def inject_logged_in():
+    return dict(logged_in=(is_logged_in()))
+
+@app.context_processor
+def inject_github_org():
+    return dict(github_org=os.getenv('GITHUB_ORG'))
+
+def is_logged_in():
+    return 'github_token' in session
+
+
 @app.route("/")
 def home():
     return render_template('home.html')
@@ -129,5 +230,7 @@ def render_testpage():
     return render_template('testPage.html')
 
 
+
+
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5000)

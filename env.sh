@@ -3,6 +3,13 @@ export GITHUB_CLIENT_SECRET=090dbceb5cfab7c632a47a35bfffa040b67b02b9
 export APP_SECRET_KEY=f042eu9840qgah94YfhjeoagiLfa4e92387y271
 export GITHUB_ORG=ucsd-cse-spis-2016
 
+export MONGO_HOST=ds019766.mlab.com   
+export MONGO_PORT=19766
+export MONGO_DBNAME=spis16-luis-james
+export MONGO_USERNAME=webappdrawings
+export MONGO_PASSWORD=vfnu449q48tgv
+
+
 # Keep this comment and the ones below.
 # To use this file, type this at the bash shell prompt:
 #

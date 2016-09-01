@@ -56,15 +56,11 @@ code that makes this example work.</p>
       path.arcTo(event.point);
     }
   }
-  function getProjectSVG() {  
-     return paper.project.exportSVG({asString:true});
-     // or use this if you need it to be "encoded" as "urlsafe"  
-     // return encodeURIComponent(paper.project.exportSVG({asString:true}));
-  }
+
   $( document ).ready(function() {
     $('#get_SVG_button').click(function() {
         console.log( "Handler for #get_SVG_button click() called." );
-        var svgString = getProjectSVG();
+        var svgString = getProjectSVG(paper);
         $("#put_SVG_here").text(svgString); 
    });
   });

@@ -8,6 +8,18 @@
 <p>Press backspace to clear the last item.</p>
 
 <br>
+
+<div class="center">
+    <form action="/write" method="post" name="save_svg_form">
+        <label>Title<input type="text" name="title"></label>
+        <input type="hidden" name="content" id="content" value="">
+        <button class="button" onclick="save_svg()">Save</button>
+        <div id="shareBtn" class="btn btn-success clearfix">Share</div>
+    </form>
+        
+</div>
+
+<div class="center">
     <div class="dropdown">
       <button class="button dropbtn">Tools</button>
       <div class="dropdown-content">
@@ -16,8 +28,8 @@
         <a onclick="text_tool.activate();">Text</a>
       </div>
     </div>
-
-    <h4>Colors:</h4>
+    
+    Colors:
     
     <button class="button black_button" onclick="color_change('black')">Black</button>
     <button class="button red_button" onclick="color_change('red')">Red</button>
@@ -27,19 +39,16 @@
     <button class="button blue_button" onclick="color_change('blue')">Blue</button>
     <button class="button purple_button" onclick="color_change('purple')">Purple</button>
 
-    <h4>Thickness:</h4>
+    Thickness:
 
     <button class="button" onclick="thick_change(1)">1 px</button>
     <button class="button" onclick="thick_change(2)">2 px</button>
     <button class="button" onclick="thick_change(3)">3 px</button>
     <button class="button" onclick="thick_change(4)">4 px</button>
     <button class="button" onclick="thick_change(5)">5 px</button>
+</div>
 
 <canvas id="myCanvas"></canvas>
-
-<br><br>
-
-<div id="shareBtn" class="btn btn-success clearfix">Share</div>
 
 <script type="text/javascript">
 
