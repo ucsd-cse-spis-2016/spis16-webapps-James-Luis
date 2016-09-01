@@ -9,8 +9,8 @@
 <div class="center">
     <form action="/write" method="post" name="save_svg_form">
         <label>Title: <input type="text" name="title"></label>
-        <input type="hidden" name="content" id="content" value="">
-        <button class="button save" onclick="save_svg()">Save</button>
+        <textarea hidden="hidden" name="content" id="content"></textarea>
+        <button class="button save" onclick="get_svg()">Save</button>
         <div id="shareBtn" class="btn btn-success clearfix">Share</div>
     </form>
         

@@ -19,7 +19,7 @@
     <td> {{userinput._id}} </td>
     <td> {{userinput.login}} </td>
     <td> {{ userinput.title }} </td>
-    <td><pre>{{ userinput.content }}</pre></td>
+    <td>{{ userinput.content | safe }}</td>
     <td>
       {% if userinput.login==login %}
       <form name="delete_{{userinput._id}}" 

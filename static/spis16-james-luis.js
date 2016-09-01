@@ -1,8 +1,6 @@
-function save_svg() {
+function get_svg() {
     svg = getProjectSVG(paper);
-    console.log("svg="+svg);
-    window.alert("svg="+svg);
-    $("#content").val("svg="+svg);
+    $("#content").text(svg);
     document.save_svg_form.submit();
 }
 
